@@ -61,6 +61,32 @@
   margin-right: 4px;
 }
 
+/* map */
+/* Basic image container */
+.map-container {
+  position: relative;
+}
+
+.plan-image {
+  width: 100%;  /* Or use fixed width/height */
+  height: auto;
+}
+
+/* Overlay for the areas */
+.area {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Overlay effect for hover */
+.area:hover {
+  background-color: rgba(0, 0, 0, 0.4);  /* Transparent dark overlay */
+  border: 2px solid rgba(255, 255, 255, 0.7);  /* Optional border on hover */
+  opacity: 0.7;  /* Slight fade on hover */
+  transition: all 0.3s ease;
+}
+
+
 @media (max-width: 600px) {
   .property-list {
     gap: 10px;

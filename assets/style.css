@@ -46,6 +46,10 @@
   font-size: 18px;
 }
 
+.pdf-button a {
+  text-decoration: none;
+}
+
 .pdf-button button {
   background-color: #e8c39e;
   border: none;
@@ -55,6 +59,7 @@
   cursor: default;
   display: flex;
   align-items: center;
+  flex-direction: column;
 }
 
 .pdf-button .icon {

@@ -1,8 +1,3 @@
-.planer-container img {
-  width: 100%;
-  height: auto;
-}
-
 .property-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -20,6 +15,11 @@
   padding: 10px 16px;
   gap: 10px;
   font-family: sans-serif;
+  cursor: pointer;
+}
+
+.property-card.selected {
+  border: 1px solid #cca75b;
 }
 
 .lot {
@@ -52,7 +52,7 @@
   padding: 6px 12px;
   border-radius: 6px;
   font-weight: bold;
-  cursor: pointer;
+  cursor: default;
   display: flex;
   align-items: center;
 }
@@ -62,32 +62,60 @@
 }
 
 /* map */
-/* Basic image container */
+/* Container holding the image and map */
 .map-container {
   position: relative;
-}
-
-.plan-image {
-  width: 100%;  /* Or use fixed width/height */
+  width: 100%;
   height: auto;
 }
 
-/* Overlay for the areas */
-.area {
-  position: relative;
+.map-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
+  /* background-color: #cca75ba3; */
 }
 
-/* Overlay effect for hover */
-.area:hover {
-  background-color: rgba(0, 0, 0, 0.4);  /* Transparent dark overlay */
-  border: 2px solid rgba(255, 255, 255, 0.7);  /* Optional border on hover */
-  opacity: 0.7;  /* Slight fade on hover */
-  transition: all 0.3s ease;
+.overlay {
+  background-color: transparent;
 }
 
+.overlay.overlay {
+  background-color: #cca75ba3; /* your active highlight */
+}
+
+.overlay::after {
+  content: attr(data-title);
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: none;
+}
+
+.overlay:hover::after {
+  display: block;
+}
 
 @media (max-width: 600px) {
+  .planer-header {
+    position: sticky;
+    top: 0;
+  }
+
   .property-list {
     gap: 10px;
     padding: 10px;

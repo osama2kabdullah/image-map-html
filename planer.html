@@ -11,21 +11,22 @@
 
     <div class="planer-container">
 
-      <div class="map-container">
-        <!-- Your image with image map -->
-        <img src="assets/images/CHAMPS-scaled.jpg" usemap="#image-map" class="plan-image" alt="Campus image" />
-    
-        <map name="image-map">
-          <area target="" alt="Lot B11" title="Lot B11" href="" coords="672,476,665,584,127,561,129,451,525,451" shape="poly">
-          <area target="" alt="Lot B01" title="Lot B01" href="" coords="1106,600,1079,702,127,677,131,571,1004,589" shape="poly">
-          <area target="" alt="Lot B12" title="Lot B12" href="" coords="692,461,1059,452,1108,485,1111,580,697,571" shape="poly">
-          <area target="" alt="Lot A01" title="Lot A01" href="" coords="1364,389,1341,431,1335,549,2255,535,2257,391" shape="poly">
-          <area target="" alt="Lot A11" title="Lot A11" href="" coords="1389,672,1730,665,1735,544,1339,553,1330,663" shape="poly">
-          <area target="" alt="Lot A12" title="Lot A12" href="" coords="2253,668,2255,546,1839,544,1834,668" shape="poly">
-          <area target="" alt="Lot A21" title="Lot A21" href="" coords="1396,758,2228,774,2097,749,2090,675,1398,675" shape="poly">
-        </map>
-
+      <div class="planer-header">
+        <div class="map-container">
+          <!-- Your image with image map -->
+          <img src="assets/images/CHAMPS-scaled.jpg" usemap="#image-map" class="plan-image" alt="Campus image" />
+        
+          <div class="" data-title="Lot B11" data-clip="672,476,665,584,127,561,129,451,525,451"></div>
+          <div class="" data-title="Lot B01" data-clip="1106,600,1079,702,127,677,131,571,1004,589"></div>
+          <div class="" data-title="Lot B12" data-clip="692,461,1059,452,1108,485,1111,580,697,571"></div>
+          <div class="" data-title="Lot A01" data-clip="1364,389,1341,431,1335,549,2255,535,2257,391"></div>
+          <div class="" data-title="Lot A11" data-clip="1389,672,1730,665,1735,544,1339,553,1330,663"></div>
+          <div class="" data-title="Lot A12" data-clip="2253,668,2255,546,1839,544,1834,668"></div>
+          <div class="" data-title="Lot A21" data-clip="1396,758,2228,774,2097,749,2090,675,1398,675"></div>
+  
+        </div>
       </div>
+
       <div class="property-list">
         
         <!-- Row 1 -->
@@ -126,8 +127,101 @@
 
 
       </div>
-    </div>
 
+    </div>
   </main>
+
+<script>
+  window.addEventListener('load', () => {
+    const img = document.querySelector('.plan-image');
+    const overlays = document.querySelectorAll('.map-container [data-title]');
+    const propertyCards = document.querySelectorAll('.property-card');
+    let selectedOverlay = null;
+    let selectedCard = null;
+
+    const naturalWidth = img.naturalWidth;
+    const naturalHeight = img.naturalHeight;
+
+    const updateOverlays = () => {
+      const currentWidth = img.clientWidth;
+      const currentHeight = img.clientHeight;
+
+      const scaleX = currentWidth / naturalWidth;
+      const scaleY = currentHeight / naturalHeight;
+
+      overlays.forEach(overlay => {
+        const coords = overlay.dataset.clip.split(',').map(Number);
+        const points = [];
+
+        for (let i = 0; i < coords.length; i += 2) {
+          const x = coords[i] * scaleX;
+          const y = coords[i + 1] * scaleY;
+          points.push(`${x}px ${y}px`);
+        }
+
+        overlay.style.clipPath = `polygon(${points.join(',')})`;
+      });
+    };
+
+    updateOverlays();
+    window.addEventListener('resize', updateOverlays);
+
+    propertyCards.forEach(card => {
+      const lot = card.querySelector('.lot');
+      const lotText = lot?.innerText.trim();
+
+      if (!lotText) return;
+
+      const matchedOverlay = Array.from(overlays).find(
+        overlay => overlay.dataset.title === lotText
+      );
+
+      if (!matchedOverlay) return;
+
+      card.addEventListener('mouseover', () => {
+        if (matchedOverlay !== selectedOverlay) {
+          matchedOverlay.classList.add('overlay');
+        }
+      });
+
+      card.addEventListener('mouseout', () => {
+        if (matchedOverlay !== selectedOverlay) {
+          matchedOverlay.classList.remove('overlay');
+        }
+      });
+
+      card.addEventListener('click', (event) => {
+        event.stopPropagation();
+        if (selectedOverlay && selectedOverlay !== matchedOverlay) {
+          selectedOverlay.classList.remove('overlay');
+        }
+
+        selectedOverlay = matchedOverlay;
+        matchedOverlay.classList.add('overlay');
+        
+        card.classList.add('selected');
+        selectedCard = card;
+        propertyCards.forEach(otherCard => {
+          if (otherCard !== card) {
+            otherCard.classList.remove('selected');
+          }
+        });
+
+      });
+    });
+
+    document.addEventListener('click', () => {
+      if (selectedOverlay) {
+        selectedOverlay.classList.remove('overlay');
+        selectedOverlay = null;
+      }
+      if (selectedCard) {
+        selectedCard.classList.remove('selected');
+        selectedCard = null;
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
